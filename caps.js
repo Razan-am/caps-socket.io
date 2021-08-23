@@ -5,13 +5,13 @@ const faker = require('faker');
 
 const port = process.env.PORT || 3000;
 const io = require('socket.io')(port);
-const clientIo = require('socket.io-client');
+// const clientIo = require('socket.io-client');
 
 const vendoreRoute = io.of('/vendor');
-const driverRoute = io.of('/driver');
+// const driverRoute = io.of('/driver');
 
 
-let host = 'http://localhost:3000';
+// let host = 'http://localhost:3000';
 
 
 let payload ={
@@ -23,7 +23,7 @@ let payload ={
 
 vendoreRoute.on('connection',(socket)=>{
     console.log('Connect To vendor:',socket.id);
-    socket.on('store',(payload)=>{
+    socket.on('pickup',(payload)=>{
         vendoreRoute.emit('pickup',payload);
     });
 })
