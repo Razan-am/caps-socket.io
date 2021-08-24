@@ -15,7 +15,8 @@ setInterval(()=>{
         address:  faker.address.direction()
     }
     socket.emit('pickup',payload);
-},1500);
+    socket.emit('new_msg',payload);
+},5000);
 
 socket.on('delivering-it',payload=>{
     console.log('VENDOR: Thank you for delivering',payload.orderId);
