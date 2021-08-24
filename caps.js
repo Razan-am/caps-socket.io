@@ -1,50 +1,46 @@
 'use strict';
 
 require('dotenv').config();
-const faker = require('faker');
 
 const port = process.env.PORT || 3000;
 const io = require('socket.io')(port);
-// const clientIo = require('socket.io-client');
 
-const vendoreRoute = io.of('/vendor');
-// const driverRoute = io.of('/driver');
+const caps = io.of('/caps');
 
+caps.on('connection',(socket)=>{
 
-// let host = 'http://localhost:3000';
-
-
-let payload ={
-    storeName: process.env.STORE_NAME,
-    orderId: faker.datatype.number(),
-    customerName: faker.name.findName(),
-    address:  faker.address.direction()
-}
-
-vendoreRoute.on('connection',(socket)=>{
     console.log('Connect To vendor:',socket.id);
     socket.on('pickup',(payload)=>{
-        vendoreRoute.emit('pickup',payload);
+        let pickUpPayload={
+            event:'pickup',
+            time: new Date().toLocaleDateString(),
+            payload
+        }
+        console.log('Event',pickUpPayload);
+        caps.emit('picking-up',payload);
     });
-})
 
-
-vendoreRoute.on('connection',(socket)=>{
-    console.log('Connect To vendor:',socket.id);
-    socket.on('store',(payload)=>{
-        vendoreRoute.emit('in-transit',payload);
+    console.log('Connect To in-transit:',socket.id);
+    socket.on('in-transit',(payload)=>{
+        let inTransitPayload = {
+            event:'in-transit',
+            time:new Date().toLocaleDateString(),
+            payload
+        }
+        console.log('Event',inTransitPayload);
     });
-})
 
-driverRoute.on('connection',(socket)=>{
     console.log('Connect To driver:',socket.id);
-    socket.on('client',(payload)=>{
-        driverRoute.emit('delivered',payload);
+    socket.on('delivered',(payload)=>{
+        let delevveredPayload = {
+            event:'delivered',
+            time:new Date().toLocaleDateString(),
+            payload
+        };
+        console.log('Event',delevveredPayload);
+        caps.emit('delivering-it',payload);
     });
 })
 
-const vendorConnection =clientIo.connect(`${host}/vendor`);
-const driverConnection =clientIo.connect(`${host}/driver`);
 
-vendorConnection.emit('store')
-driverConnection.emit('client')
+module.exports=caps

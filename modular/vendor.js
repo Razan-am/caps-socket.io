@@ -3,30 +3,31 @@
 const faker = require('faker');
 const clientIo = require('socket.io-client');
 
-let vendorhost = 'http://localhost:3000/vendor';
+let host = 'http://localhost:3000/caps';
 
-const vendorConnection = clientIo.connect(vendorhost);
+const socket = clientIo.connect(host);
 
-vendorConnection.on('pickup',payload =>{
-     payload={
-        event:'pickup',
-        time: new Date().toLocaleDateString(),
-        payload
+setInterval(()=>{
+    let payload ={
+        storeName: process.env.STORE_NAME,
+        orderId: faker.datatype.number(),
+        customerName: faker.name.findName(),
+        address:  faker.address.direction()
     }
-   console.log('Event',payload)
+    socket.emit('pickup',payload);
+},5000);
+// setTimeout(()=>{
 
-    setTimeout(()=>{
-        console.log('DRIVER: picked up',payload.payload.orderId);
-        events.emit('in-transit',payload);
-    },1000)
+//     let payload ={
+//         storeName: process.env.STORE_NAME,
+//         orderId: faker.datatype.number(),
+//         customerName: faker.name.findName(),
+//         address:  faker.address.direction()
+//     }
+//     socket.emit('pickup',payload);
+// },1500)
+
+socket.on('delivering-it',payload=>{
+    console.log('VENDOR: Thank you for delivering',payload.orderId);
 })
 
-vendorConnection.on('in-transit',payload =>{
-     payload = {
-        event:'in-transit',
-        time:new Date().toLocaleDateString(),
-        payload
-    }
-    console.log('Event',payload);
-    events.emit('delivered',payload)
-})

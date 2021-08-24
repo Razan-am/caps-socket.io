@@ -1,21 +1,21 @@
 'use strict';
 
-const faker = require('faker');
+
 const clientIo = require('socket.io-client');
 
-let host = 'http://localhost:3000/driver';
+let host = 'http://localhost:3000/caps';
 
-const driverConnection = clientIo.connect(host);
+const socket = clientIo.connect(host);
 
-driverConnection.on('delivered',payload =>{
-     payload = {
-        event:'delivered',
-        time:new Date().toLocaleDateString(),
-        payload
-    }
+socket.on('picking-up',payload =>{
+    
     setTimeout(()=>{
-        console.log('DRIVER: delivered up',payload.payload.orderId);
-        console.log('VENDOR: Thank you for delivering',payload.payload.orderId);
-        console.log('Event',payload);
-    },3000)
+        console.log('DRIVER: picked up',payload.orderId);
+        socket.emit('in-transit',payload);
+    },1000);
+    
+    setTimeout(()=>{
+        console.log('DRIVER: delivered up',payload.orderId);
+        socket.emit('delivered',payload);
+    },3000);
 })
