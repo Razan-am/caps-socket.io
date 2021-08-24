@@ -15,17 +15,7 @@ setInterval(()=>{
         address:  faker.address.direction()
     }
     socket.emit('pickup',payload);
-},5000);
-// setTimeout(()=>{
-
-//     let payload ={
-//         storeName: process.env.STORE_NAME,
-//         orderId: faker.datatype.number(),
-//         customerName: faker.name.findName(),
-//         address:  faker.address.direction()
-//     }
-//     socket.emit('pickup',payload);
-// },1500)
+},1500);
 
 socket.on('delivering-it',payload=>{
     console.log('VENDOR: Thank you for delivering',payload.orderId);
