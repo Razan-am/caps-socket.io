@@ -28,7 +28,7 @@
 ![uml](./images/socket.png)
 
 ### Notes
-- pull request : https://github.com/Razan-am/caps/pull/2
+- pull request : https://github.com/Razan-am/caps-socket.io/pull/1
 - How do I install the app or library?
   - Clone the repo to your local machine
   - in the terminal, `run npm i`
